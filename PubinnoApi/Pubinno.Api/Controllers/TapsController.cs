@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Pubinno.Api.Controllers;
 
 [ApiController]
-[Route("v1/[controller]")]
+[Route("v1/taps")]
 public class TapsController : ControllerBase
 {
     private readonly IMediator _mediator;
