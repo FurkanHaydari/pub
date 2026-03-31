@@ -1,8 +1,8 @@
 using System;
 
-namespace PubinnoApi.Dtos;
+namespace PubinnoApi.Features.Pours;
 
-public class PourRequest
+public class CreatePourRequest
 {
     public Guid EventId { get; set; }
     public string DeviceId { get; set; } = string.Empty;
