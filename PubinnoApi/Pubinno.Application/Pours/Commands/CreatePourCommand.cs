@@ -1,8 +1,9 @@
+using MediatR;
 using System;
 
-namespace PubinnoApi.Data;
+namespace Pubinno.Application.Pours.Commands;
 
-public class Pour
+public class CreatePourCommand : IRequest<bool>
 {
     public Guid EventId { get; set; }
     public string DeviceId { get; set; } = string.Empty;

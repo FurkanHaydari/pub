@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 
-namespace PubinnoApi.Features.Taps;
+namespace Pubinno.Application.Taps.Dtos;
 
-public class GetSummaryResponse
+public class GetSummaryResponseDto
 {
     public string DeviceId { get; set; } = string.Empty;
     public DateTime From { get; set; }

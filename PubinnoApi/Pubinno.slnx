@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Pubinno.Api/Pubinno.Api.csproj" />
+  <Project Path="Pubinno.Application/Pubinno.Application.csproj" />
+  <Project Path="Pubinno.Data/Pubinno.Data.csproj" />
+</Solution>

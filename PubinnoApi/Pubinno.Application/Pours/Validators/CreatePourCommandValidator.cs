@@ -1,11 +1,11 @@
 using FluentValidation;
-using System;
+using Pubinno.Application.Common;
 
-namespace PubinnoApi.Features.Pours;
+namespace Pubinno.Application.Pours.Validators;
 
-public class CreatePourValidator : AbstractValidator<CreatePourRequest>
+public class CreatePourCommandValidator : AbstractValidator<Commands.CreatePourCommand>
 {
-    public CreatePourValidator()
+    public CreatePourCommandValidator()
     {
         RuleFor(x => x.EventId)
             .NotEmpty().WithMessage("Invalid EventId.");

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace PubinnoApi;
+namespace Pubinno.Application.Common;
 
 public static class Constants
 {

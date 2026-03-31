@@ -1,27 +1,31 @@
 using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using PubinnoApi;
-using PubinnoApi.Data;
-using PubinnoApi.Features.Pours;
-using PubinnoApi.Features.Taps;
+using Pubinno.Application;
+using Pubinno.Data;
+using Pubinno.Data.Contexts;
 using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// DbContext configuration
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
-    ?? Environment.GetEnvironmentVariable("DATABASE_URL");
+// Controllers & FluentValidation
+builder.Services.AddControllers()
+    .ConfigureApiBehaviorOptions(options =>
+    {
+        // Custom 400 responses can be configured here if necessary
+    });
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(connectionString));
+// FluentValidation automatic integration
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddFluentValidationClientsideAdapters();
 
-// Register FluentValidation Validators
-builder.Services.AddValidatorsFromAssemblyContaining<CreatePourValidator>();
+// Data and Application Registrations
+builder.Services.AddDataServices(builder.Configuration);
+builder.Services.AddApplicationServices();
 
 // Dynamic PORT resolution for Render
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
@@ -29,14 +33,14 @@ builder.WebHost.UseUrls($"http://*:{port}");
 
 var appBuilder = builder.Build();
 
-// Ensure Database Created automatically
+// Ensure Database Created automatically (Entity Framework Core Seeding)
 using (var scope = appBuilder.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     db.Database.EnsureCreated();
 }
 
-// X-API-Key Middleware (Global Authentication Filter)
+// Global X-API-Key Middleware
 appBuilder.Use(async (context, next) =>
 {
     if (context.Request.Path == "/health")
@@ -79,8 +83,7 @@ appBuilder.MapGet("/health", async (AppDbContext db) =>
     }
 });
 
-// Vertical Slice Endpoints Registration
-CreatePourEndpoint.Map(appBuilder);
-GetSummaryEndpoint.Map(appBuilder);
+// Map Controllers
+appBuilder.MapControllers();
 
 appBuilder.Run();
